@@ -4,8 +4,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private NoteListRecyclerAdapter noteRecyclerAdapter;
     private FirebaseFirestore mFirestore;
     private SearchView searchView;
+    private SwipeRefreshLayout refreshPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,33 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        refreshPage = findViewById(R.id.refreshLayout);
+        refreshPage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mFirestore.collection("Notes").addSnapshotListener(MainActivity.this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        notesList.clear();
+                        for (DocumentChange documentChange : documentSnapshots.getDocumentChanges()) {
+                            if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                                String noteId = documentChange.getDocument().getId();
+                                NoteList noteList = documentChange.getDocument().toObject(NoteList.class).withId(noteId);
+                                notesList.add(noteList);
+                                noteRecyclerAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshPage.setRefreshing(false);
+                        Toast.makeText(MainActivity.this, "Refreshed.", Toast.LENGTH_SHORT).show();
+                    }
+                }, 4000);
+            }
+        });
     }
 
     @Override

@@ -116,6 +116,7 @@ public class NoteListRecyclerAdapter extends RecyclerView.Adapter<NoteListRecycl
                 queueId = downloadManager.enqueue(request);
             }
         });
+        holder.copies.setText(String.valueOf(noteList.get(position).getCopies()));
     }
 
     @Override
@@ -132,7 +133,7 @@ public class NoteListRecyclerAdapter extends RecyclerView.Adapter<NoteListRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
-        private TextView noteName, noteDescription, noteUploadedOn, noteUploadedBy, branch, semester, classvalue;
+        private TextView noteName, noteDescription, noteUploadedOn, noteUploadedBy, branch, semester, classvalue, copies;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -144,6 +145,7 @@ public class NoteListRecyclerAdapter extends RecyclerView.Adapter<NoteListRecycl
             branch = mView.findViewById(R.id.noteBranch);
             semester = mView.findViewById(R.id.noteSemester);
             classvalue = mView.findViewById(R.id.noteClass);
+            copies = mView.findViewById(R.id.noteCopies);
         }
     }
 }

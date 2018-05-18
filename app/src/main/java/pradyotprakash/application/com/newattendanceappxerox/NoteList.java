@@ -1,10 +1,11 @@
 package pradyotprakash.application.com.newattendanceappxerox;
 
-public class NoteList extends NotesId{
+public class NoteList extends NotesId {
 
     private String branch, description, name, noteLink, title, uploadedBy, uploadedOn, classValue, semester;
+    private long copies;
 
-    public NoteList(String branch, String description, String name, String noteLink, String title, String uploadedBy, String uploadedOn, String classValue, String semester) {
+    public NoteList(String branch, String description, String name, String noteLink, String title, String uploadedBy, String uploadedOn, String classValue, String semester, long copies) {
         this.branch = branch;
         this.description = description;
         this.name = name;
@@ -14,9 +15,18 @@ public class NoteList extends NotesId{
         this.uploadedOn = uploadedOn;
         this.classValue = classValue;
         this.semester = semester;
+        this.copies = copies;
     }
 
     public NoteList() {
+    }
+
+    public long getCopies() {
+        return copies;
+    }
+
+    public void setCopies(long copies) {
+        this.copies = copies;
     }
 
     public String getSemester() {
